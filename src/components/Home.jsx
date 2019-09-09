@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 
-import { URL, GET, LIMIT } from "../utils";
+import { URL, GET, LIMIT } from "../utils/utils";
 
 function Home() {
   const [products, updateProducts] = useState([]);
