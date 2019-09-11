@@ -7,19 +7,23 @@ import { URL, GET } from "../utils/utils";
 
 function Product(props) {
   const [product, updateProduct] = useState(null);
+  const [reviews, updateReviews] = useState(null);
   const [amount, updateAmount] = useState(1);
   const [userCart, updateUserCart] = useState(cart$.value);
 
   useEffect(() => {
-    console.log(userCart);
-
     let subscription = cart$.subscribe(cart => {
       updateUserCart(cart);
     });
 
     axios
-      .get(`${GET}/products?filter[_id]=${props.match.params.id}`)
-      .then(res => updateProduct(res.data.entries[0]));
+      .get(`${GET}/reviews?filter[product._id]=${props.match.params.id}`)
+      .then(res => updateReviews(res.data.entries))
+      .then(() => {
+        axios
+          .get(`${GET}/products?filter[_id]=${props.match.params.id}`)
+          .then(res => updateProduct(res.data.entries[0]));
+      });
 
     return () => {
       subscription.unsubscribe();
@@ -30,7 +34,7 @@ function Product(props) {
     let newUserCart = [...userCart];
     let pos = newUserCart.findIndex(x => x._id === product._id);
 
-    if (pos != -1) {
+    if (pos !== -1) {
       newUserCart[pos].amount = newUserCart[pos].amount + amount;
     } else {
       newUserCart.push({
@@ -58,7 +62,9 @@ function Product(props) {
           <Helmet>
             <title>{product.name}</title>
           </Helmet>
+
           <div>
+            {/* product */}
             <h2>{product.name}</h2>
             <p>{product.description}</p>
             <p>Price: {product.price}€</p>
@@ -68,6 +74,9 @@ function Product(props) {
                 <img key={id} src={`${URL}/${image.path}`} alt={product.name} />
               ))}
             </div>
+            {/* product end */}
+
+            {/* add to cart */}
             <div>
               <div>
                 <button
@@ -94,6 +103,19 @@ function Product(props) {
               </div>
               <button onClick={addToCart}>Add to cart</button>
             </div>
+            {/* add to cart end */}
+
+            {/* reviews */}
+            <div>
+              {reviews.map(review => (
+                <div key={review._id}>
+                  <h3>{review.title}</h3>
+                  <p>Rating: {review.rating}</p>
+                  <p>{review.body}</p>
+                </div>
+              ))}
+            </div>
+            {/* reviews end */}
           </div>
         </div>
       )}
