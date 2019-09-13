@@ -7,6 +7,7 @@ import Home from "./components/Home";
 import Product from "./components/Product";
 import Cart from "./components/Cart";
 import Checkout from "./components/Checkout";
+import OrderComplete from "./components/OrderComplete";
 import "./App.css";
 
 function App() {
@@ -38,6 +39,7 @@ function App() {
         <Route path="/product/:id" component={Product} />
         <Route path="/shopping_cart" component={Cart} />
         <Route path="/checkout" component={Checkout} />
+        <Route path="/order_complete" component={OrderComplete} />
       </main>
 
       <footer>
