@@ -5,6 +5,8 @@ import { Helmet } from "react-helmet";
 import { cart$ } from "./utils/store";
 import Home from "./components/Home";
 import Product from "./components/Product";
+import Cart from "./components/Cart";
+import Checkout from "./components/Checkout";
 import "./App.css";
 
 function App() {
@@ -34,6 +36,8 @@ function App() {
       <main>
         <Route path="/" exact component={Home} />
         <Route path="/product/:id" component={Product} />
+        <Route path="/shopping_cart" component={Cart} />
+        <Route path="/checkout" component={Checkout} />
       </main>
 
       <footer>
