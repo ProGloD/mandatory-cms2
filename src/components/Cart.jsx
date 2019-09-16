@@ -17,7 +17,7 @@ function Cart() {
         let productTotal = product.amount * parseFloat(product.price);
         total = total + productTotal;
       });
-      updateTotalPrice(total);
+      updateTotalPrice(total.toFixed(2));
     });
 
     return () => {
@@ -47,8 +47,8 @@ function Cart() {
         <tbody>
           {userCart.map(product => {
             return (
-              <tr key={product._id}>
-                <td>{product.name}</td>
+              <tr key={product.collection._id}>
+                <td>{product.collection.display}</td>
                 <td>{product.amount}</td>
                 <td>{product.price}€</td>
                 <td>

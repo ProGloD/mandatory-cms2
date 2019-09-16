@@ -39,16 +39,19 @@ function Product(props) {
 
   function addToCart() {
     let newUserCart = [...userCart];
-    let pos = newUserCart.findIndex(x => x._id === product._id);
+    let pos = newUserCart.findIndex(x => x.collection._id === product._id);
 
     if (pos !== -1) {
       newUserCart[pos].amount = newUserCart[pos].amount + amount;
     } else {
       newUserCart.push({
-        _id: product._id,
-        name: product.name,
-        amount: amount,
-        price: product.price
+        amount,
+        price: product.price,
+        collection: {
+          _id: product._id,
+          link: "products",
+          display: product.name
+        }
       });
     }
 
