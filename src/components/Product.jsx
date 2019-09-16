@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Helmet } from "react-helmet";
 import axios from "axios";
 
+import NewReview from "./NewReview";
 import { cart$, updateCart } from "../utils/store";
 import { URL, GET } from "../utils/utils";
 
@@ -17,18 +18,24 @@ function Product(props) {
     });
 
     axios
-      .get(`${GET}/reviews?filter[product._id]=${props.match.params.id}`)
-      .then(res => updateReviews(res.data.entries))
-      .then(() => {
-        axios
-          .get(`${GET}/products?filter[_id]=${props.match.params.id}`)
-          .then(res => updateProduct(res.data.entries[0]));
+      .get(`${GET}/products?filter[_id]=${props.match.params.id}`)
+      .then(res => {
+        updateProduct(res.data.entries[0]);
+        getReviews();
       });
 
     return () => {
       subscription.unsubscribe();
     };
   }, []);
+
+  function getReviews() {
+    axios
+      .get(
+        `${GET}/reviews?filter[product._id]=${props.match.params.id}&sort[_created]=-1`
+      )
+      .then(res => updateReviews(res.data.entries));
+  }
 
   function addToCart() {
     let newUserCart = [...userCart];
@@ -50,7 +57,7 @@ function Product(props) {
 
   return (
     <>
-      {!product ? (
+      {!product || !reviews ? (
         <div>
           <Helmet>
             <title>Loading...</title>
@@ -107,13 +114,16 @@ function Product(props) {
 
             {/* reviews */}
             <div>
-              {reviews.map(review => (
-                <div key={review._id}>
-                  <h3>{review.title}</h3>
-                  <p>Rating: {review.rating}</p>
-                  <p>{review.body}</p>
-                </div>
-              ))}
+              <NewReview product={product} getReviews={getReviews} />
+              <div>
+                {reviews.map(review => (
+                  <div key={review._id}>
+                    <h3>{review.title}</h3>
+                    <p>Rating: {review.rating}</p>
+                    <p>{review.body}</p>
+                  </div>
+                ))}
+              </div>
             </div>
             {/* reviews end */}
           </div>
