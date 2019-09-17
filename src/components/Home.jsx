@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 
 import { URL, GET, LIMIT } from "../utils/utils";
+import "../style/Home.css";
 
 function Home() {
   const [products, updateProducts] = useState([]);
@@ -20,23 +21,27 @@ function Home() {
       )
       .then(res => {
         updateProducts(res.data.entries);
-        updateMaxpage(Math.floor(res.data.total / LIMIT) + 1);
+        updateMaxpage(Math.round(res.data.total / LIMIT));
       });
   }, [query, checked, page]);
 
   return (
-    <div>
-      <div>
-        <span>Search: </span>
+    <div className="main">
+      <div className="main-search">
+        <span className="search-icon">
+          <i className="material-icons">search</i>
+        </span>
         <input
+          className="search"
           type="text"
           onChange={e => updateQuery(e.target.value)}
+          placeholder="Search..."
           value={query}
         />
       </div>
 
       <div>
-        <span>In stock: </span>
+        <span>In stock only </span>
         <input
           type="checkbox"
           onChange={e => updateChecked(e.target.checked)}
@@ -44,17 +49,21 @@ function Home() {
         />
       </div>
 
-      <div>
+      <div className="products-list">
         {products.map(product => (
-          <div key={product._id}>
-            <Link to={`/product/${product._id}`}>{product.name}</Link>
+          <Link
+            className="products-list__item"
+            to={`/product/${product._id} `}
+            key={product._id}
+          >
+            <h3>{product.name}</h3>
             <img src={`${URL}/${product.images[0].path}`} alt={product.name} />
             <p>Price: {product.price}€</p>
-          </div>
+          </Link>
         ))}
       </div>
 
-      <div>
+      <div className="pagination">
         <button onClick={() => (page > 1 ? updatePage(page - 1) : null)}>
           &lt;
         </button>

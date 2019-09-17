@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Helmet } from "react-helmet";
+import Rating from "react-rating";
 import axios from "axios";
 
 import NewReview from "./NewReview";
 import { cart$, updateCart } from "../utils/store";
 import { URL, GET } from "../utils/utils";
+import "../style/Product.css";
 
 function Product(props) {
   const [product, updateProduct] = useState(null);
@@ -87,42 +89,47 @@ function Product(props) {
             {/* product end */}
 
             {/* add to cart */}
-            <div>
+            {product.amount_in_stock > 0 ? (
               <div>
-                <button
-                  onClick={() => (amount > 1 ? updateAmount(amount - 1) : null)}
-                >
-                  -
-                </button>
-                <input
-                  type="number"
-                  onChange={e => updateAmount(e.target.value)}
-                  min={1}
-                  max={product.amount_in_stock}
-                  value={amount}
-                />
-                <button
-                  onClick={() =>
-                    amount < product.amount_in_stock
-                      ? updateAmount(amount + 1)
-                      : null
-                  }
-                >
-                  +
-                </button>
+                <div>
+                  <button
+                    onClick={() =>
+                      amount > 1 ? updateAmount(amount - 1) : null
+                    }
+                  >
+                    -
+                  </button>
+                  <input
+                    type="number"
+                    onChange={e => updateAmount(e.target.value)}
+                    min={1}
+                    max={product.amount_in_stock}
+                    value={amount}
+                  />
+                  <button
+                    onClick={() =>
+                      amount < product.amount_in_stock
+                        ? updateAmount(amount + 1)
+                        : null
+                    }
+                  >
+                    +
+                  </button>
+                </div>
+                <button onClick={addToCart}>Add to cart</button>
               </div>
-              <button onClick={addToCart}>Add to cart</button>
-            </div>
+            ) : null}
+
             {/* add to cart end */}
 
             {/* reviews */}
             <div>
               <NewReview product={product} getReviews={getReviews} />
-              <div>
+              <div className="product-reviews">
                 {reviews.map(review => (
-                  <div key={review._id}>
+                  <div className="review" key={review._id}>
                     <h3>{review.title}</h3>
-                    <p>Rating: {review.rating}</p>
+                    <Rating initialRating={review.rating} readonly />
                     <p>{review.body}</p>
                   </div>
                 ))}

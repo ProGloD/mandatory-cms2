@@ -32,43 +32,47 @@ function Cart() {
   }
 
   return (
-    <div>
+    <>
       <Helmet>
         <title>Shopping Cart</title>
       </Helmet>
-      <table>
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Quantity</th>
-            <th>Price</th>
-          </tr>
-        </thead>
-        <tbody>
-          {userCart.map(product => {
-            return (
-              <tr key={product.collection._id}>
-                <td>{product.collection.display}</td>
-                <td>{product.amount}</td>
-                <td>{product.price}€</td>
-                <td>
-                  <button onClick={() => removeProduct(product)}>
-                    &times;
-                  </button>
-                </td>
+      {userCart.length === 0 ? (
+        <p>Shopping cart is empty...</p>
+      ) : (
+        <div>
+          <table>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Quantity</th>
+                <th>Price</th>
               </tr>
-            );
-          })}
-        </tbody>
-      </table>
+            </thead>
+            <tbody>
+              {userCart.map(product => {
+                return (
+                  <tr key={product.collection._id}>
+                    <td>{product.collection.display}</td>
+                    <td>{product.amount}</td>
+                    <td>{product.price}€</td>
+                    <td>
+                      <button onClick={() => removeProduct(product)}>
+                        &times;
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
 
-      <span>Total: {totalPrice}€</span>
-      {totalPrice ? (
-        <button>
-          <Link to="/checkout">Checkout</Link>
-        </button>
-      ) : null}
-    </div>
+          <span>Total: {totalPrice}€</span>
+          <button>
+            <Link to="/checkout">Checkout</Link>
+          </button>
+        </div>
+      )}
+    </>
   );
 }
 
